@@ -13,7 +13,7 @@ reload: stop-hubot run-hubot
 
 run-redis:
 	- docker rm redis
-	docker run -d -p 6379:6379 -v $(BASEDIR)/brain --name=redis redis redis-server --appendonly yes
+	docker run -d -p 6379:6379 -v $(BASEDIR)/brain:/data --name=redis redis redis-server --appendonly yes
 
 stop-redis:
 	docker stop redis
