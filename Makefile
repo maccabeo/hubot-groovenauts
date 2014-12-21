@@ -26,6 +26,7 @@ run-hubot:
 	  -e HUBOT_SLACK_TOKEN=$(HUBOT_SLACK_TOKEN) \
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
+	  -p 8080:8080 \
 	  --name="hubot-naga" \
 	  hubot-naga
 
