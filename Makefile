@@ -5,6 +5,7 @@ REDIS_URL=redis://`boot2docker ip`:6379
 include env.mk
 
 all: run-hubot
+run: run-hubot
 run-all: run-redis run-hubot
 stop: stop-hubot
 stop-all: stop-hubot stop-redis
@@ -16,7 +17,7 @@ run-redis:
 	docker run -d -p 6379:6379 -v $(BASEDIR)/brain:/data --name=redis redis redis-server --appendonly yes
 
 stop-redis:
-	docker stop redis
+	- docker stop redis
 
 run-hubot:
 	- docker rm hubot-naga
@@ -32,7 +33,7 @@ run-hubot:
 	  hubot-naga
 
 stop-hubot:
-	docker stop hubot-naga
+	- docker stop hubot-naga
 
 run-test:
 	- docker rm hubot-naga-test
