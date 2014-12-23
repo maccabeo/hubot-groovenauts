@@ -34,3 +34,7 @@ run-hubot:
 stop-hubot:
 	docker stop hubot-naga
 
+run-test:
+	- docker rm hubot-naga-test
+	docker build -t hubot-naga:latest .
+	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-naga-test hubot-naga:latest node_modules/mocha/bin/mocha
