@@ -84,12 +84,11 @@ announcePullRequest = (data, cb) ->
       mentioned = mentioned.map (nick) -> nick[2].trim()
       mentioned = unique mentioned
       mentioned = mentioned.map (nick) ->
-        nick = nick.match(/@([\w\-\/]+)/)[1]
         for _uid, user of robot.brain.users
-          if user.githubLogin == nick
-            nick = user.name
+          if "@#{user.githubLogin}" == nick
+            nick = "@#{user.name}"
             break
-        "@#{nick}"
+        nick
 
       mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
     else
