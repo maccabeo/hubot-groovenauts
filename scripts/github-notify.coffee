@@ -1,25 +1,24 @@
 # Description:
-#   GitHub の WebHook から Pull Request の通知を受ける
+#   GitHub の WebHook からの通知を受ける
 #
 # Dependencies:
 #   "url": ""
 #   "querystring": ""
 #
 # Configuration:
-#   You will have to do the following:
-#   1. Get an API token: curl -u 'username' -d '{"scopes":["repo"],"note":"hubot"}' \
+#   GitHub で以下の設定が必要です
+#
+#   1. API token 取得: curl -u 'username' -d '{"scopes":["repo"],"note":"hubot"}' \
 #                         https://api.github.com/authorizations
-#   2. Add <HUBOT_URL>:<PORT>/hubot/gh-pull-requests url hook via API:
-#      curl -H "Authorization: token <your api token>" \
-#      -d '{"name":"web","active":true,"events":["pull_request"],"config":{"url":"<this script url>","content_type":"json"}}' \
-#      https://api.github.com/repos/<your user>/<your repo>/hooks
+#   2. GitHub リポジトリの WebHook 設定に次の URL を設定:
+#         http://<HUBOT_URL>:<PORT>/hubot/gh-notify
 #
 # Commands:
-#   hubot github pull requests notify <repo> <room> -- <repo> の pull request を <room> に通知する
-#   hubot github pull requests notify show -- pull request の通知先 room を表示
+#   hubot github <repo> to <room> -- <repo> のイベントを <room> に通知する
+#   hubot github notify show -- GitHub イベントのリポジトリ毎の通知先 room を表示
 #
 # URLS:
-#   POST /hubot/gh-pull-requests
+#   POST /hubot/gh-notify
 #
 # Authors:
 #   nagachika
@@ -29,23 +28,24 @@ url = require('url')
 querystring = require('querystring')
 
 module.exports = (robot) ->
-  robot.respond /github\s+pull\s+requests\s+notify\s+([a-z0-9_./-]+)\s+([^\s]+)\s*$/, (msg) ->
+  robot.respond /github\s+notify\s+([a-z0-9_./-]+)\s+to\s+([^\s]+)\s*$/, (msg) ->
     repo = msg.match[1]
     room = msg.match[2]
-    m = (robot.brain.get("gh-pull-requests-repository-to-rooms") || {})
+    m = (robot.brain.get("gh-notify-repository-to-rooms") || {})
     r = (m[repo] || [])
     r.push(room)
     m[repo] = r
-    robot.brain.set("gh-pull-requests-repository-to-rooms", m)
+    robot.brain.set("gh-notify-repository-to-rooms", m)
     msg.reply "#{repo} の Pull Request の通知を #{room} に送信します"
 
-  robot.respond /github\s+pull\s+requests\s+notify\s+show\s*$/, (msg) ->
-    repos = (robot.brain.get("gh-pull-requests-repository-to-rooms") || {})
+  robot.respond /github\s+notify\s+show\s*$/, (msg) ->
+    msg.send "GitHub の Pull Request の通知設定一覧"
+    repos = (robot.brain.get("gh-notify-repository-to-rooms") || {})
     for repo in repos
       rooms = repos[repo]
       msg.send "#{repo} -> #{rooms}"
 
-  robot.router.post "/hubot/gh-pull-requests", (req, res) ->
+  robot.router.post "/hubot/gh-notify", (req, res) ->
     data = req.body
     repo = data.repository.full_name
 
@@ -60,7 +60,7 @@ module.exports = (robot) ->
     res.end ""
 
 repo2rooms = (robot, repo) ->
-  m = (robot.brain.get("gh-pull-requests-repository-to-rooms") || {})
+  m = (robot.brain.get("gh-notify-repository-to-rooms") || {})
   return (m[repo] || [])
 
 announcePullRequest = (data, cb) ->
