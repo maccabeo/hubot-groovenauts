@@ -29,21 +29,25 @@ querystring = require('querystring')
 
 module.exports = (robot) ->
   robot.respond /github\s+notify\s+([a-z0-9_./-]+)\s+to\s+([^\s]+)\s*$/, (msg) ->
+    unique = (array) ->
+      output = {}
+      output[array[key]] = array[key] for key in [0...array.length]
+      value for key, value of output
     repo = msg.match[1]
     room = msg.match[2]
     m = (robot.brain.get("gh-notify-repository-to-rooms") || {})
     r = (m[repo] || [])
     r.push(room)
-    m[repo] = r
+    m[repo] = unique r
     robot.brain.set("gh-notify-repository-to-rooms", m)
     msg.reply "#{repo} の Pull Request の通知を #{room} に送信します"
 
   robot.respond /github\s+notify\s+show\s*$/, (msg) ->
     msg.send "GitHub の Pull Request の通知設定一覧"
     repos = (robot.brain.get("gh-notify-repository-to-rooms") || {})
-    for repo in repos
-      rooms = repos[repo]
-      msg.send "#{repo} -> #{rooms}"
+    for repo, rooms of repos
+      rooms ||= []
+      msg.send "#{repo} → #{rooms.join(", ")}"
 
   robot.router.post "/hubot/gh-notify", (req, res) ->
     data = req.body
@@ -77,8 +81,15 @@ announcePullRequest = (data, cb) ->
         slashes = nick.match(/\//g)
         slashes is null or slashes.length < 2
 
-      mentioned = mentioned.map (nick) -> nick.trim()
+      mentioned = mentioned.map (nick) -> nick[2].trim()
       mentioned = unique mentioned
+      mentioned = mentioned.map (nick) ->
+        nick = nick.match(/@([\w\-\/]+/)[1]
+        for _uid, user of robot.brain.users
+          if user.githubLogin == nick
+            nick = user.name
+            break
+        "@#{nick}"
 
       mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
     else
