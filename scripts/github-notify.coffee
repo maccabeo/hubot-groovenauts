@@ -55,7 +55,7 @@ module.exports = (robot) ->
 
     for room in repo2rooms(robot, repo)
       try
-        announcePullRequest data, (what) ->
+        announcePullRequest robot, data, (what) ->
           robot.messageRoom room, what
       catch error
         robot.messageRoom room, "GitHub 通知処理中にエラーが発生しました: #{error}"
@@ -67,7 +67,7 @@ repo2rooms = (robot, repo) ->
   m = (robot.brain.get("gh-notify-repository-to-rooms") || {})
   return (m[repo] || [])
 
-announcePullRequest = (data, cb) ->
+announcePullRequest = (robot, data, cb) ->
   if data.action == 'opened'
     mentioned = data.pull_request.body?.match(/(^|\s)(@[\w\-\/]+)/g)
 
