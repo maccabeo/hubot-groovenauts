@@ -1,8 +1,11 @@
 
 BASEDIR=$(PWD)
-REDIS_URL=redis://`boot2docker ip`:6379
 
 include env.mk
+
+ifndef REDIS_URL
+REDIS_URL=redis://`boot2docker ip`:6379
+endif
 
 all: run-hubot
 run: run-hubot
