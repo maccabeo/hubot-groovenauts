@@ -37,6 +37,13 @@ module.exports = (robot) ->
     r.push(room)
     m[repo] = r
     robot.brain.set("gh-pull-requests-repository-to-rooms", m)
+    msg.reply "#{repo} の Pull Request の通知を #{room} に送信します"
+
+  robot.respond /github\s+pull\s+requests\s+notify\s+show\s*$/, (msg) ->
+    repos = (robot.brain.get("gh-pull-requests-repository-to-rooms") || {})
+    for repo in repos
+      rooms = repos[repo]
+      msg.send "#{repo} -> #{rooms}"
 
   robot.router.post "/hubot/gh-pull-requests", (req, res) ->
     data = req.body
