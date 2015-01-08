@@ -81,7 +81,7 @@ announcePullRequest = (robot, data, cb) ->
         slashes = nick.match(/\//g)
         slashes is null or slashes.length < 2
 
-      mentioned = mentioned.map (nick) -> nick[2].trim()
+      mentioned = mentioned.map (nick) -> nick.trim()
       mentioned = unique mentioned
       mentioned = mentioned.map (nick) ->
         for _uid, user of robot.brain.users
