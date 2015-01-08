@@ -13,7 +13,10 @@ run-all: run-redis run-hubot
 stop: stop-hubot
 stop-all: stop-hubot stop-redis
 
-reload: stop-hubot run-hubot
+build-latest:
+	docker build -t hubot-naga:latest .
+
+reload: build-latest stop-hubot run-hubot
 
 run-redis:
 	- docker rm redis
@@ -38,7 +41,6 @@ run-hubot:
 stop-hubot:
 	- docker stop hubot-naga
 
-run-test:
+run-test: build-latest
 	- docker rm hubot-naga-test
-	docker build -t hubot-naga:latest .
 	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-naga-test hubot-naga:latest node_modules/mocha/bin/mocha
