@@ -12,6 +12,7 @@
 #   hubot github show repos -- デフォルトの対象リポジトリ一覧表示
 #   hubot github add repo <repo> -- デフォルトの対象リポジトリに <repo> を追加
 #   hubot github show {PR,pull req} [<repo>] -- GitHub の open な pull request 一覧
+#   hubot github show issue[s] -- GitHub の open な issue 一覧
 #
 # Notes:
 #   HUBOT_GITHUB_API allows you to set a custom URL path (for Github enterprise users)
@@ -86,5 +87,30 @@ module.exports = (robot) ->
                 mentioned = ""
               # cannot use label for a link see: https://github.com/slackhq/hubot-slack/issues/114
               summary += "\n\t#{pull.html_url} #{pull.title} - #{pull.user.login}#{mentioned}\n"
+          msg.send summary
+      cb(repo)
+
+  robot.respond /github\s+show\s+issues?\s*([a-z0-9._/-]+)?$/i, (msg)->
+    repos = msg.match[3]
+    if repos
+      repos = []
+      for r in repo.split(",")
+        repos.push(r)
+    else
+      repos = robot.brain.get("github_default_target_repos")
+      unless repos
+        repos = []
+
+    for repo in repos
+      cb = (repo) ->
+        github.get "#{url_api_base}/repos/#{repo}/issues?state=open", (issues) ->
+          if issues.length == 0
+            summary = "#{repo}: issue はありません :+1:"
+          else
+            summary = "#{repo}: issue 一覧\n"
+            for issue in issues
+              continue if issue.html_url.match(/\/pulls?\//)
+              # cannot use label for a link see: https://github.com/slackhq/hubot-slack/issues/114
+              summary += "\n\t#{issue.html_url} #{issue.title} - #{issue.user.login}\n"
           msg.send summary
       cb(repo)
