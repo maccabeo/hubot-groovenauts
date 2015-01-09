@@ -88,7 +88,7 @@ announcePullRequest = (robot, data, cb) ->
           if "@#{user.githubLogin}" == nick
             nick = "@#{user.name}"
             break
-        nick
+        "<#{nick}>"
 
       mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
     else
