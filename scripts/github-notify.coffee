@@ -14,7 +14,7 @@
 #         http://<HUBOT_URL>:<PORT>/hubot/gh-notify
 #
 # Commands:
-#   hubot github <repo> to <room> -- <repo> のイベントを <room> に通知する
+#   hubot github notify <repo> to <room> -- <repo> のイベントを <room> に通知する
 #   hubot github notify show -- GitHub イベントのリポジトリ毎の通知先 room を表示
 #
 # URLS:
