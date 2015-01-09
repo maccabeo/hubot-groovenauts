@@ -69,10 +69,20 @@ module.exports = (robot) ->
         else
           summary = "#{repo}: pull request 一覧\n"
           for pull in pulls
-            mentioned = ""
-            pull.body.replace /@[a-z0-9_-]+/g, (match) ->
-              mentioned += " <#{match}>"
+            mentioned = []
+            pull.body.replace /\[ \]\s*(@[a-z0-9_-]+)/g, (match, nick) ->
+              mentioned.push(nick)
               match
+            mentioned = mentioned.map (nick) ->
+              for _uid, user of robot.brain.users()
+                if "@#{user.githubLogin}" == nick
+                  nick = "@#{user.name}"
+                  break
+              "<#{nick}>"
+            if mentioned.length > 0
+              mentioned = ": " + mentioned.join(", ")
+            else
+              mentioned = ""
             # cannot use label for a link see: https://github.com/slackhq/hubot-slack/issues/114
-            summary += "\n\t#{pull.html_url} #{pull.title} - #{pull.user.login}: #{mentioned}\n"
+            summary += "\n\t#{pull.html_url} #{pull.title} - #{pull.user.login}#{mentioned}\n"
         msg.send summary
