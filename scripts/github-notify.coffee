@@ -55,8 +55,13 @@ module.exports = (robot) ->
 
     for room in repo2rooms(robot, repo)
       try
-        announcePullRequest robot, data, (what) ->
-          robot.messageRoom room, what
+        switch req.header("X-Github-Event")
+          when "pull_request"
+            announcePullRequest robot, data, (what) ->
+              robot.messageRoom room, what
+          #when "pull_request_review_comment"
+          #  announcePullRequestReviewComment robot, data, (what) ->
+          #    robot.messageRoom room, what
       catch error
         robot.messageRoom room, "GitHub 通知処理中にエラーが発生しました: #{error}"
         console.log "github pull request notifier error: #{error}. Request: #{req.body}"
