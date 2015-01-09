@@ -84,7 +84,7 @@ announcePullRequest = (robot, data, cb) ->
       mentioned = mentioned.map (nick) -> nick.trim()
       mentioned = unique mentioned
       mentioned = mentioned.map (nick) ->
-        for _uid, user of robot.brain.users
+        for _uid, user of robot.brain.users()
           if "@#{user.githubLogin}" == nick
             nick = "@#{user.name}"
             break
