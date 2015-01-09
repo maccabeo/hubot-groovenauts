@@ -52,8 +52,8 @@ module.exports = (robot) ->
       robot.brain.set("github_default_target_repos", repos)
 
   robot.respond /github\s+show\s+(PRs?|pull\s+req(uests?)?)\s*([a-z0-9._/-]+)?$/i, (msg)->
-    repo = msg.match[3]
-    if repo
+    repos = msg.match[3]
+    if repos
       repos = []
       for r in repo.split(",")
         repos.push(r)
@@ -63,26 +63,28 @@ module.exports = (robot) ->
         repos = []
 
     for repo in repos
-      github.get "#{url_api_base}/repos/#{repo}/pulls", (pulls) ->
-        if pulls.length == 0
-          summary = "#{repo}: マージ待ちの pull request はありません :+1:"
-        else
-          summary = "#{repo}: pull request 一覧\n"
-          for pull in pulls
-            mentioned = []
-            pull.body.replace /\[ \]\s*(@[a-z0-9_-]+)/g, (match, nick) ->
-              mentioned.push(nick)
-              match
-            mentioned = mentioned.map (nick) ->
-              for _uid, user of robot.brain.users()
-                if "@#{user.githubLogin}" == nick
-                  nick = "@#{user.name}"
-                  break
-              "<#{nick}>"
-            if mentioned.length > 0
-              mentioned = ": " + mentioned.join(", ")
-            else
-              mentioned = ""
-            # cannot use label for a link see: https://github.com/slackhq/hubot-slack/issues/114
-            summary += "\n\t#{pull.html_url} #{pull.title} - #{pull.user.login}#{mentioned}\n"
-        msg.send summary
+      cb = (repo) ->
+        github.get "#{url_api_base}/repos/#{repo}/pulls", (pulls) ->
+          if pulls.length == 0
+            summary = "#{repo}: マージ待ちの pull request はありません :+1:"
+          else
+            summary = "#{repo}: pull request 一覧\n"
+            for pull in pulls
+              mentioned = []
+              pull.body.replace /\[ \]\s*(@[a-z0-9_-]+)/g, (match, nick) ->
+                mentioned.push(nick)
+                match
+              mentioned = mentioned.map (nick) ->
+                for _uid, user of robot.brain.users()
+                  if "@#{user.githubLogin}" == nick
+                    nick = "@#{user.name}"
+                    break
+                "<#{nick}>"
+              if mentioned.length > 0
+                mentioned = ": " + mentioned.join(", ")
+              else
+                mentioned = ""
+              # cannot use label for a link see: https://github.com/slackhq/hubot-slack/issues/114
+              summary += "\n\t#{pull.html_url} #{pull.title} - #{pull.user.login}#{mentioned}\n"
+          msg.send summary
+      cb(repo)
