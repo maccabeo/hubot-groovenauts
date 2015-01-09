@@ -10,7 +10,7 @@
 #
 # Commands:
 #   hubot GitHub アカウント一覧 - List all the users with github logins tracked by Hubot
-#   hubot わたしはGitHubでは`nagachika`です - map your user to the github login `nagachika`
+#   hubot わたしのGitHubアカウントは`nagachika`です - map your user to the github login `nagachika`
 #   hubot わたしのGitHubアカウントは? - reveal your mapped github login
 #
 # Author:
