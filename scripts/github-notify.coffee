@@ -73,30 +73,37 @@ repo2rooms = (robot, repo) ->
   return (m[repo] || [])
 
 announcePullRequest = (robot, data, cb) ->
-  if data.action == 'opened'
-    mentioned = data.pull_request.body?.match(/(^|\s)(@[\w\-\/]+)/g)
+  switch data.action
+    when 'opened'
+      mentioned = data.pull_request.body?.match(/(^|\s)(@[\w\-\/]+)/g)
 
-    if mentioned
-      unique = (array) ->
-        output = {}
-        output[array[key]] = array[key] for key in [0...array.length]
-        value for key, value of output
+      if mentioned
+        unique = (array) ->
+          output = {}
+          output[array[key]] = array[key] for key in [0...array.length]
+          value for key, value of output
 
-      mentioned = mentioned.filter (nick) ->
-        slashes = nick.match(/\//g)
-        slashes is null or slashes.length < 2
+        mentioned = mentioned.filter (nick) ->
+          slashes = nick.match(/\//g)
+          slashes is null or slashes.length < 2
 
-      mentioned = mentioned.map (nick) -> nick.trim()
-      mentioned = unique mentioned
-      mentioned = mentioned.map (nick) ->
-        for _uid, user of robot.brain.users()
-          if "@#{user.githubLogin}" == nick
-            nick = "@#{user.name}"
-            break
-        "<#{nick}>"
+        mentioned = mentioned.map (nick) -> nick.trim()
+        mentioned = unique mentioned
+        mentioned = mentioned.map (nick) ->
+          for _uid, user of robot.brain.users()
+            if "@#{user.githubLogin}" == nick
+              nick = "@#{user.name}"
+              break
+          "<#{nick}>"
 
-      mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
-    else
-      mentioned_line = ''
+        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+      else
+        mentioned_line = ''
 
-    cb "New pull request \"#{data.pull_request.title}\" by #{data.pull_request.user.login}: #{data.pull_request.html_url}#{mentioned_line}"
+      cb "PR が作成されました \"#{data.pull_request.title}\" by #{data.pull_request.user.login}: #{data.pull_request.html_url}#{mentioned_line}"
+
+    when "synchronized"
+      cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\": #{data.pull_requst.html_url}"
+
+    when "closed"
+      cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}: #{data.pull_requst.html_url}"
