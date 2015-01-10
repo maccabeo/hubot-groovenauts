@@ -59,9 +59,9 @@ module.exports = (robot) ->
           when "pull_request"
             announcePullRequest robot, data, (what) ->
               robot.messageRoom room, what
-          #when "pull_request_review_comment"
-          #  announcePullRequestReviewComment robot, data, (what) ->
-          #    robot.messageRoom room, what
+          when "pull_request_review_comment"
+            announcePullRequestReviewComment robot, data, (what) ->
+              robot.messageRoom room, what
       catch error
         robot.messageRoom room, "GitHub 通知処理中にエラーが発生しました: #{error}"
         console.log "github pull request notifier error: #{error}. Request: #{req.body}"
@@ -72,30 +72,41 @@ repo2rooms = (robot, repo) ->
   m = (robot.brain.get("gh-notify-repository-to-rooms") || {})
   return (m[repo] || [])
 
+unique = (array) ->
+  output = {}
+  output[array[key]] = array[key] for key in [0...array.length]
+  value for key, value of output
+
+extract_mentions = (robot, body) ->
+  if body
+    mentioned = body.match(/(^|\s)(@[\w\-\/]+)/g)
+  else
+    return []
+
+  if mentioned
+    mentioned = mentioned.filter (nick) ->
+      slashes = nick.match(/\//g)
+      slashes is null or slashes.length < 2
+
+    mentioned = mentioned.map (nick) -> nick.trim()
+    mentioned = unique mentioned
+    mentioned = mentioned.map (nick) ->
+      for _uid, user of robot.brain.users()
+        if "@#{user.githubLogin}" == nick
+          nick = "@#{user.name}"
+          break
+      "<#{nick}>"
+    mentioned
+  else
+    []
+
+
 announcePullRequest = (robot, data, cb) ->
   switch data.action
     when 'opened'
-      mentioned = data.pull_request.body?.match(/(^|\s)(@[\w\-\/]+)/g)
+      mentioned = extract_mentions(robot, data.pull_request.body)
 
-      if mentioned
-        unique = (array) ->
-          output = {}
-          output[array[key]] = array[key] for key in [0...array.length]
-          value for key, value of output
-
-        mentioned = mentioned.filter (nick) ->
-          slashes = nick.match(/\//g)
-          slashes is null or slashes.length < 2
-
-        mentioned = mentioned.map (nick) -> nick.trim()
-        mentioned = unique mentioned
-        mentioned = mentioned.map (nick) ->
-          for _uid, user of robot.brain.users()
-            if "@#{user.githubLogin}" == nick
-              nick = "@#{user.name}"
-              break
-          "<#{nick}>"
-
+      if mentioned.length > 0
         mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
@@ -107,3 +118,15 @@ announcePullRequest = (robot, data, cb) ->
 
     when "closed"
       cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}: #{data.pull_requst.html_url}"
+
+announcePullRequestReviewComment = (robot, data, cb) ->
+  switch data.action
+    when 'created'
+      mentioned = extract_mentions(robot, data.pull_request.body)
+
+      if mentioned.length > 0
+        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+      else
+        mentioned_line = ''
+
+      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.pull_request.html_url}#{mentioned_line}"
