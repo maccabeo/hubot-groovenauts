@@ -129,4 +129,4 @@ announcePullRequestReviewComment = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.pull_request.html_url}#{mentioned_line}"
+      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}"
