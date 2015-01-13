@@ -64,6 +64,14 @@ module.exports = (robot) ->
           announcePullRequestReviewComment robot, data, (what) ->
             for room in repo2rooms(robot, repo)
               robot.messageRoom room, what
+        when "issues"
+          announceIssue robot, data, (what) ->
+            for room in repo2room(robot, repo)
+              robot.messageRoom room, what
+        when "issues_comment"
+          announceIssueComment robot, data, (what) ->
+            for room in repo2room(robot, repo)
+              robot.messageRoom room, what
     catch error
       console.log "github pull request notifier error: #{error}. Request: #{JSON.stringify(req.body)}"
       for _uid, user of robot.brain.users()
@@ -134,3 +142,28 @@ announcePullRequestReviewComment = (robot, data, cb) ->
         mentioned_line = ''
 
       cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}"
+
+announceIssue = (robot, data, cb) ->
+  switch data.action
+    when 'opened'
+      mentioned = extract_mentions(robot, data.issue.body)
+
+      if mentioned.length > 0
+        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+      else
+        mentioned_line = ''
+
+      cb "Issue が作成されました \"#{data.issue.title}\" by #{data.issue.user.login}: #{data.issue.html_url}#{mentioned_line}"
+
+    when "closed"
+      cb "Issue が close されました \"#{data.issue.title}\" by #{data.sender.login}: #{data.issue.html_url}"
+
+announceIssueComment = (robot, data, cb) ->
+  switch data.action
+    when 'created'
+      mentioned = extract_mentions(robot, data.comment.body)
+      if mentioned.length > 0
+        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+      else
+        mentioned_line = ''
+      cb "\"#{data.issue.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}\n#{data.comment.body}"
