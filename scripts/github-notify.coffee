@@ -65,7 +65,7 @@ module.exports = (robot) ->
             for room in repo2rooms(robot, repo)
               robot.messageRoom room, what
     catch error
-      console.log "github pull request notifier error: #{error}. Request: #{req.body}"
+      console.log "github pull request notifier error: #{error}. Request: #{JSON.stringify(req.body)}"
       for _uid, user of robot.brain.users()
         if robot.auth.isAdmin(user)
           robot.messageRoom user.name, "GitHub 通知処理中にエラーが発生しました: #{error}"
@@ -121,7 +121,7 @@ announcePullRequest = (robot, data, cb) ->
       cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\": #{data.pull_requst.html_url}"
 
     when "closed"
-      cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}: #{data.pull_requst.html_url}"
+      cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}: #{data.pull_request.html_url}"
 
 announcePullRequestReviewComment = (robot, data, cb) ->
   switch data.action
