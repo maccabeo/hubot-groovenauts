@@ -40,10 +40,10 @@ module.exports = (robot) ->
     r.push(room)
     m[repo] = unique r
     robot.brain.set("gh-notify-repository-to-rooms", m)
-    msg.reply "#{repo} の Pull Request の通知を #{room} に送信します"
+    msg.reply "#{repo} の通知を #{room} に送信します"
 
   robot.respond /github\s+notify\s+show\s*$/, (msg) ->
-    msg.send "GitHub の Pull Request の通知設定一覧"
+    msg.send "GitHub の通知設定一覧"
     repos = (robot.brain.get("gh-notify-repository-to-rooms") || {})
     for repo, rooms of repos
       rooms ||= []
