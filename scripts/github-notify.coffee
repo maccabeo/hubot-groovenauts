@@ -65,8 +65,10 @@ module.exports = (robot) ->
             for room in repo2rooms(robot, repo)
               robot.messageRoom room, what
     catch error
-      robot.messageRoom room, "GitHub 通知処理中にエラーが発生しました: #{error}"
       console.log "github pull request notifier error: #{error}. Request: #{req.body}"
+      for _uid, user of robot.brain.users()
+        if robot.auth.isAdmin(user)
+          robot.messageRoom user.name, "GitHub 通知処理中にエラーが発生しました: #{error}"
 
     res.end ""
 
