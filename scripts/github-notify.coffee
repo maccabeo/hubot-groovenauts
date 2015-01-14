@@ -68,7 +68,7 @@ module.exports = (robot) ->
           announceIssue robot, data, (what) ->
             for room in repo2room(robot, repo)
               robot.messageRoom room, what
-        when "issues_comment"
+        when "issue_comment"
           announceIssueComment robot, data, (what) ->
             for room in repo2room(robot, repo)
               robot.messageRoom room, what
