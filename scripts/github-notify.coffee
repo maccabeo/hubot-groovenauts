@@ -126,7 +126,7 @@ announcePullRequest = (robot, data, cb) ->
       cb "PR が作成されました \"#{data.pull_request.title}\" by #{data.pull_request.user.login}: #{data.pull_request.html_url}#{mentioned_line}"
 
     when "synchronize"
-      cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\": #{data.pull_requst.html_url}"
+      cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\": #{data.pull_request.html_url}"
 
     when "closed"
       cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}: #{data.pull_request.html_url}"
