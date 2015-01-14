@@ -58,19 +58,19 @@ module.exports = (robot) ->
       switch req.header("X-Github-Event")
         when "pull_request"
           announcePullRequest robot, data, (what) ->
-            for room in repo2rooms(robot, repo)
+            for room in rooms
               robot.messageRoom room, what
         when "pull_request_review_comment"
           announcePullRequestReviewComment robot, data, (what) ->
-            for room in repo2rooms(robot, repo)
+            for room in rooms
               robot.messageRoom room, what
         when "issues"
           announceIssue robot, data, (what) ->
-            for room in repo2room(robot, repo)
+            for room in rooms
               robot.messageRoom room, what
         when "issue_comment"
           announceIssueComment robot, data, (what) ->
-            for room in repo2room(robot, repo)
+            for room in rooms
               robot.messageRoom room, what
     catch error
       console.log "github pull request notifier error: #{error}. Request: #{JSON.stringify(req.body)}"
