@@ -3,5 +3,6 @@
   "hubot-help",
   "hubot-heroku-keepalive",
   "hubot-google-translate",
-  "hubot-redis-brain"
+  "hubot-redis-brain",
+  "hubot-rss-reader"
 ]
