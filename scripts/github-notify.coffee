@@ -112,6 +112,16 @@ extract_mentions = (robot, body) ->
   else
     []
 
+ellipsisize = (str, num) ->
+  lines = str.split("\n")
+  header = lines.slice(0, num)
+  buff = header.join("\n")
+  quotes = buff.match(/```/g)
+  if (quotes && quotes.length % 2) == 1
+    buff += "\n```"
+  if lines.slice(num).length > 0
+    buff += "\n..."
+  return buff
 
 announcePullRequest = (robot, data, cb) ->
   switch data.action
@@ -141,7 +151,7 @@ announcePullRequestReviewComment = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}"
+      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
 
 announceIssue = (robot, data, cb) ->
   switch data.action
@@ -166,4 +176,4 @@ announceIssueComment = (robot, data, cb) ->
         mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
-      cb "\"#{data.issue.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}\n#{data.comment.body}"
+      cb "\"#{data.issue.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
