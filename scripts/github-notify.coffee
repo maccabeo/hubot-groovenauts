@@ -133,13 +133,13 @@ announcePullRequest = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "PR が作成されました \"#{data.pull_request.title}\" by #{data.pull_request.user.login}: #{data.pull_request.html_url}#{mentioned_line}\n#{ellipsisize(data.pull_request.body, 4)}"
+      cb "PR が作成されました \"#{data.pull_request.title}\" by #{data.pull_request.user.login}\n#{data.pull_request.html_url}#{mentioned_line}\n#{ellipsisize(data.pull_request.body, 4)}"
 
     when "synchronize"
-      cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\": #{data.pull_request.html_url}"
+      cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\"\n#{data.pull_request.html_url}"
 
     when "closed"
-      cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}: #{data.pull_request.html_url}"
+      cb "PR が close されました \"#{data.pull_request.title}\" by #{data.pull_request.merged_by?.login}\n#{data.pull_request.html_url}"
 
 announcePullRequestReviewComment = (robot, data, cb) ->
   switch data.action
@@ -151,7 +151,7 @@ announcePullRequestReviewComment = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
+      cb "\"#{data.pull_request.title}\" コメント追加 by #{data.comment.user.login}\n#{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
 
 announceIssue = (robot, data, cb) ->
   switch data.action
@@ -163,10 +163,10 @@ announceIssue = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "Issue が作成されました \"#{data.issue.title}\" by #{data.issue.user.login}: #{data.issue.html_url}#{mentioned_line}\n#{ellipsisize(data.issue.body, 4)}"
+      cb "Issue が作成されました \"#{data.issue.title}\" by #{data.issue.user.login}\n#{data.issue.html_url}#{mentioned_line}\n#{ellipsisize(data.issue.body, 4)}"
 
     when "closed"
-      cb "Issue が close されました \"#{data.issue.title}\" by #{data.sender.login}: #{data.issue.html_url}"
+      cb "Issue が close されました \"#{data.issue.title}\" by #{data.sender.login}\n#{data.issue.html_url}"
 
 announceIssueComment = (robot, data, cb) ->
   switch data.action
@@ -176,4 +176,4 @@ announceIssueComment = (robot, data, cb) ->
         mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
-      cb "\"#{data.issue.title}\" コメント追加 by #{data.comment.user.login}: #{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
+      cb "\"#{data.issue.title}\" コメント追加 by #{data.comment.user.login}\n#{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
