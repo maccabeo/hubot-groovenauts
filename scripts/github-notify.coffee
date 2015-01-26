@@ -133,7 +133,7 @@ announcePullRequest = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "PR が作成されました \"#{data.pull_request.title}\" by #{data.pull_request.user.login}: #{data.pull_request.html_url}#{mentioned_line}"
+      cb "PR が作成されました \"#{data.pull_request.title}\" by #{data.pull_request.user.login}: #{data.pull_request.html_url}#{mentioned_line}\n#{ellipsisize(data.pull_request.body, 4)}"
 
     when "synchronize"
       cb "PR にコミットが追加pushされました \"#{data.pull_request.title}\": #{data.pull_request.html_url}"
@@ -163,7 +163,7 @@ announceIssue = (robot, data, cb) ->
       else
         mentioned_line = ''
 
-      cb "Issue が作成されました \"#{data.issue.title}\" by #{data.issue.user.login}: #{data.issue.html_url}#{mentioned_line}"
+      cb "Issue が作成されました \"#{data.issue.title}\" by #{data.issue.user.login}: #{data.issue.html_url}#{mentioned_line}\n#{ellipsisize(data.issue.body, 4)}"
 
     when "closed"
       cb "Issue が close されました \"#{data.issue.title}\" by #{data.sender.login}: #{data.issue.html_url}"
