@@ -20,7 +20,7 @@ reload: build-latest stop-hubot run-hubot
 
 run-redis:
 	- docker rm redis
-	docker run -d -p 6379:6379 -v $(BASEDIR)/brain:/data --name=redis redis redis-server --appendonly yes
+	docker run -d -p 6379:6379 -v $(BASEDIR)/brain:/data --name=redis redis redis-server --appendonly yes --auto-aof-rewrite-min-size 32mb --auto-aof-rewrite-percentage 50
 
 stop-redis:
 	- docker stop redis
