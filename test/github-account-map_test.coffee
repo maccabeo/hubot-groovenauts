@@ -20,7 +20,9 @@ describe "GitHub Account Map", ->
       done()
     robot.run()
 
-  afterEach -> robot.shutdown()
+  afterEach ->
+    robot.server.close()
+    robot.shutdown()
 
   it "GitHub アカウント記憶", (done) ->
     adapter.on "send", (envelope, strings) ->
