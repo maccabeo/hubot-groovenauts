@@ -51,6 +51,7 @@ module.exports = (robot) ->
         repos = []
       repos.push repo
       robot.brain.set("github_default_target_repos", repos)
+      msg.send "対象のリポジトリに #{repo} を追加しました"
 
   robot.respond /github\s+show\s+(PRs?|pull\s+req(uests?)?)\s*([a-z0-9._/-]+)?$/i, (msg)->
     repos = msg.match[3]
