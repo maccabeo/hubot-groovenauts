@@ -4,7 +4,7 @@ BASEDIR=$(PWD)
 include env.mk
 
 ifndef REDIS_URL
-REDIS_URL=redis://`boot2docker ip`:6379
+REDIS_URL=redis://`boot2docker ip`:6379/$(HUBOT_ENV)
 endif
 
 all: run-hubot
