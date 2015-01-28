@@ -1,5 +1,7 @@
 
 BASEDIR=$(PWD)
+CURRENT_VERSION=`sed -ne 's/ *"version": "\(.*\)",/\1/p' package.json`
+DOCKER_IMAGE_NAME=hubot-groovenauts
 
 include env.mk
 
@@ -14,7 +16,10 @@ stop: stop-hubot
 stop-all: stop-hubot stop-redis
 
 build-latest:
-	docker build -t hubot-groovenauts:latest .
+	docker build -t $(DOCKER_IMAGE_NAME):latest .
+
+build-head:
+	docker build -t $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION) .
 
 reload: build-latest stop-hubot run-hubot
 
@@ -36,11 +41,11 @@ run-hubot:
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
 	  -p 8080:8080 \
 	  --name="hubot-groovenauts" \
-	  hubot-groovenauts
+	  $(DOCKER_IMAGE_NAME)
 
 stop-hubot:
 	- docker stop hubot-groovenauts
 
 run-test: build-latest
 	- docker rm hubot-groovenauts-test
-	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-groovenauts-test hubot-groovenauts:latest node_modules/mocha/bin/mocha
+	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-groovenauts-test $(DOCKER_IMAGE_NAME):latest node_modules/mocha/bin/mocha
