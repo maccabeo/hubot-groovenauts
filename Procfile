@@ -1,1 +1,1 @@
-web: bin/hubot -a slack -n hubot-naga
+web: bin/hubot -a slack -n hubot-groovenauts

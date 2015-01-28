@@ -14,7 +14,7 @@ stop: stop-hubot
 stop-all: stop-hubot stop-redis
 
 build-latest:
-	docker build -t hubot-naga:latest .
+	docker build -t hubot-groovenauts:latest .
 
 reload: build-latest stop-hubot run-hubot
 
@@ -26,7 +26,7 @@ stop-redis:
 	- docker stop redis
 
 run-hubot:
-	- docker rm hubot-naga
+	- docker rm hubot-groovenauts
 	docker run -d \
 	  -e HUBOT_SLACK_TEAM=$(HUBOT_SLACK_TEAM) \
 	  -e HUBOT_SLACK_BOTNAME=$(HUBOT_SLACK_BOTNAME) \
@@ -35,12 +35,12 @@ run-hubot:
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
 	  -p 8080:8080 \
-	  --name="hubot-naga" \
-	  hubot-naga
+	  --name="hubot-groovenauts" \
+	  hubot-groovenauts
 
 stop-hubot:
-	- docker stop hubot-naga
+	- docker stop hubot-groovenauts
 
 run-test: build-latest
-	- docker rm hubot-naga-test
-	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-naga-test hubot-naga:latest node_modules/mocha/bin/mocha
+	- docker rm hubot-groovenauts-test
+	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-groovenauts-test hubot-groovenauts:latest node_modules/mocha/bin/mocha
