@@ -23,7 +23,7 @@ build-latest:
 build-head:
 	docker build -t $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION) .
 
-reload: build-latest stop-hubot-latest run-hubot-latest
+reload: build-latest stop-hubot run-hubot
 
 run-redis:
 	- docker rm redis
@@ -31,6 +31,9 @@ run-redis:
 
 stop-redis:
 	- docker stop redis
+
+run-hubot: run-hubot-latest
+stop-hubot: stop-hubot-latest
 
 run-hubot-latest:
 	- docker rm hubot-groovenauts
