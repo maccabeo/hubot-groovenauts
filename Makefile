@@ -2,9 +2,11 @@
 BASEDIR=$(PWD)
 CURRENT_VERSION=`sed -ne 's/ *"version": "\(.*\)",/\1/p' package.json`
 DOCKER_IMAGE_NAME=hubot-groovenauts
+HUBOT_ENV ?= staging
 
-include env.mk
+include $(HUBOT_ENV).mk
 
+# for Boot2docker users' convinience
 ifndef REDIS_URL
 REDIS_URL=redis://`boot2docker ip`:6379/$(HUBOT_ENV)
 endif
