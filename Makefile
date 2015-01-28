@@ -21,7 +21,7 @@ build-latest:
 build-head:
 	docker build -t $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION) .
 
-reload: build-latest stop-hubot run-hubot
+reload: build-latest stop-hubot-latest run-hubot-latest
 
 run-redis:
 	- docker rm redis
@@ -30,7 +30,7 @@ run-redis:
 stop-redis:
 	- docker stop redis
 
-run-hubot:
+run-hubot-latest:
 	- docker rm hubot-groovenauts
 	docker run -d \
 	  -e HUBOT_SLACK_TEAM=$(HUBOT_SLACK_TEAM) \
@@ -41,10 +41,26 @@ run-hubot:
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
 	  -p 8080:8080 \
 	  --name="hubot-groovenauts" \
-	  $(DOCKER_IMAGE_NAME)
+	  $(DOCKER_IMAGE_NAME):latest
 
-stop-hubot:
+stop-hubot-latest:
 	- docker stop hubot-groovenauts
+
+run-hubot-head:
+	- docker rm hubot-groovenauts-$(CURRENT_VERSION)
+	docker run -d \
+	  -e HUBOT_SLACK_TEAM=$(HUBOT_SLACK_TEAM) \
+	  -e HUBOT_SLACK_BOTNAME=$(HUBOT_SLACK_BOTNAME) \
+	  -e HUBOT_SLACK_TOKEN=$(HUBOT_SLACK_TOKEN) \
+	  -e REDIS_URL=$(REDIS_URL) \
+	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
+	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
+	  -p 8080:8080 \
+	  --name="hubot-groovenauts-$(CURRENT_VERSION)" \
+	  $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION)
+
+stop-hubot-head:
+	- docker stop hubot-groovenauts-$(CURRENT_VERSION)
 
 run-test: build-latest
 	- docker rm hubot-groovenauts-test
