@@ -53,7 +53,7 @@ stop-hubot-latest:
 	- docker stop hubot-groovenauts
 
 run-hubot-head:
-	- docker rm hubot-groovenauts-$(CURRENT_VERSION)
+	- docker rm hubot-groovenauts-$(HUBOT_ENV)
 	docker run -d \
 	  -e HUBOT_SLACK_TEAM=$(HUBOT_SLACK_TEAM) \
 	  -e HUBOT_SLACK_BOTNAME=$(HUBOT_SLACK_BOTNAME) \
