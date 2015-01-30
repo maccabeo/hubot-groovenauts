@@ -3,6 +3,7 @@ BASEDIR=$(PWD)
 CURRENT_VERSION=`sed -ne 's/ *"version": "\(.*\)",/\1/p' package.json`
 DOCKER_IMAGE_NAME=hubot-groovenauts
 HUBOT_ENV ?= staging
+HTTP_PORT ?= 8080
 
 include $(HUBOT_ENV).mk
 
@@ -44,7 +45,7 @@ run-hubot-latest:
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
-	  -p 8080:8080 \
+	  -p $(HTTP_PORT):8080 \
 	  --name="hubot-groovenauts" \
 	  $(DOCKER_IMAGE_NAME):latest
 
@@ -60,7 +61,7 @@ run-hubot-head:
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
-	  -p 8080:8080 \
+	  -p $(HTTP_PORT):8080 \
 	  --name="hubot-groovenauts-$(HUBOT_ENV)" \
 	  $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION)
 
