@@ -61,7 +61,7 @@ run-hubot-head:
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
 	  -p 8080:8080 \
-	  --name="hubot-groovenauts-$(CURRENT_VERSION)" \
+	  --name="hubot-groovenauts-$(HUBOT_ENV)" \
 	  $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION)
 
 stop-hubot-head:
