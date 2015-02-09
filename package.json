@@ -1,6 +1,6 @@
 {
   "name": "hubot-groovenauts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "author": "nagachika@ruby-lang.org",
   "description": "my first hubot",
@@ -14,8 +14,9 @@
     "hubot-redis-brain": "0.0.2",
     "hubot-scripts": "^2.5.16",
     "hubot-slack": "^3.2.1",
-    "holiday-jp": ">= 0.1.0",
+    "holiday-jp": "latest",
     "cron": "^1.0.6",
+    "fluent-logger": "latest",
     "time": "^0.11.0",
     "chai": "^1.10.0",
     "nock": "^0.58.0",
