@@ -4,6 +4,7 @@ CURRENT_VERSION=`sed -ne 's/ *"version": "\(.*\)",/\1/p' package.json`
 DOCKER_IMAGE_NAME=hubot-groovenauts
 HUBOT_ENV ?= staging
 HTTP_PORT ?= 8080
+TZ ?= JST-9
 
 include $(HUBOT_ENV).mk
 
@@ -45,6 +46,7 @@ run-hubot-latest:
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
+	  -e TZ=$(TZ) \
 	  -p $(HTTP_PORT):8080 \
 	  --name="hubot-groovenauts" \
 	  $(DOCKER_IMAGE_NAME):latest
@@ -61,6 +63,7 @@ run-hubot-head:
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
+	  -e TZ=$(TZ) \
 	  -p $(HTTP_PORT):8080 \
 	  --name="hubot-groovenauts-$(HUBOT_ENV)" \
 	  $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION)
@@ -70,4 +73,4 @@ stop-hubot-head:
 
 run-test: build-latest
 	- docker rm hubot-groovenauts-test
-	docker run -it -e REDIS_URL=$(REDIS_URL) --name=hubot-groovenauts-test $(DOCKER_IMAGE_NAME):latest node_modules/mocha/bin/mocha
+	docker run -it -e REDIS_URL=$(REDIS_URL) -e TZ=$(TZ) --name=hubot-groovenauts-test $(DOCKER_IMAGE_NAME):latest node_modules/mocha/bin/mocha
