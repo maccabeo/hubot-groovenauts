@@ -66,7 +66,7 @@ run-hubot-head:
 	  $(DOCKER_IMAGE_NAME):$(CURRENT_VERSION)
 
 stop-hubot-head:
-	- docker stop hubot-groovenauts-$(CURRENT_VERSION)
+	- docker stop hubot-groovenauts-$(HUBOT_ENV)
 
 run-test: build-latest
 	- docker rm hubot-groovenauts-test
