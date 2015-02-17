@@ -36,6 +36,23 @@ module.exports = (robot) ->
           else
             buf = "#{items.length} matches:\n"
             for m in items
-              buf += "#{m["user"]}: #{m["text"]}\n"
+              date = m["time"]
+              month = date.getMonth()
+              day = date.getDate()
+              hour = date.getHours()
+              min = date.getMinutes()
+              sec = date.getSeconds()
+              if month < 10
+                month = "0" + month
+              if day < 10
+                day = "0" + day
+              if hour < 10
+                hour = "0" + hour
+              if min < 10
+                min = "0" + min
+              if sec < 10
+                sec = "0" + sec
+              date_str = "#{date.getFullYear()}-#{month}-#{day} #{hour}:#{min}:#{sec}"
+              buf += "#{m["user"]}:#{date_str}: #{m["text"]}\n"
             msg.send buf
           db.close
