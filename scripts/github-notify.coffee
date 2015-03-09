@@ -144,7 +144,7 @@ announcePullRequest = (robot, data, cb) ->
 announcePullRequestReviewComment = (robot, data, cb) ->
   switch data.action
     when 'created'
-      mentioned = extract_mentions(robot, data.pull_request.body)
+      mentioned = extract_mentions(robot, data.comment.body)
 
       if mentioned.length > 0
         mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
