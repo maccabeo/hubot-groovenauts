@@ -11,6 +11,7 @@
 # Commands:
 #   hubot github show repos -- デフォルトの対象リポジトリ一覧表示
 #   hubot github add repo <repo> -- デフォルトの対象リポジトリに <repo> を追加
+#   hubot github remove repo <repo> -- デフォルトの対象リポジトリから <repo> を削除
 #   hubot github show {PR,pull req} [<repo>] -- GitHub の open な pull request 一覧
 #   hubot github show issue[s] -- GitHub の open な issue 一覧
 #
@@ -59,6 +60,17 @@ module.exports = (robot) ->
       repos.push repo
       robot.brain.set("github_default_target_repos", removeDuplicates(repos))
       msg.send "対象のリポジトリに #{repo} を追加しました"
+
+  robot.respond /github\s+remove\s+repo\s+([a-z0-9._/-]+)\s*$/i, (msg) ->
+    repo = github.qualified_repo msg.match[1]
+    github.get "#{url_api_base}/repos/#{repo}", (ok) ->
+      repos = robot.brain.get("github_default_target_repos")
+      unless repos
+        repos = []
+      repos = removeDuplicates(repos).filter (v) ->
+        v != repo
+      robot.brain.set("github_default_target_repos", repos)
+      msg.send "対象のリポジトリから #{repo} を削除しました"
 
   robot.respond /github\s+show\s+(PRs?|pull\s+req(uests?)?)\s*([a-z0-9._/-]+)?$/i, (msg)->
     repos = msg.match[3]
