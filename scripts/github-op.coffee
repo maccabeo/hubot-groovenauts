@@ -34,6 +34,13 @@ module.exports = (robot) ->
   unless (url_api_base = process.env.HUBOT_GITHUB_API)?
     url_api_base = "https://api.github.com"
 
+  removeDuplicates = (ary) ->
+    if ary.length == 0
+      return []
+    res = []
+    res[ary[key]] = ary[key] for key in [0..ary.length-1]
+    value for key, value of res
+
   robot.respond /github\s+show\s+repos\s*$/i, (msg) ->
     repos = robot.brain.get("github_default_target_repos")
     unless repos
@@ -50,7 +57,7 @@ module.exports = (robot) ->
       unless repos
         repos = []
       repos.push repo
-      robot.brain.set("github_default_target_repos", repos)
+      robot.brain.set("github_default_target_repos", removeDuplicates(repos))
       msg.send "対象のリポジトリに #{repo} を追加しました"
 
   robot.respond /github\s+show\s+(PRs?|pull\s+req(uests?)?)\s*([a-z0-9._/-]+)?$/i, (msg)->
