@@ -8,6 +8,7 @@
 #
 # Commands:
 #   hubot log search <regexp> -- このチャンネルの発言ログを検索
+#   hubot log show from <from> to <to> -- このチャンネルの発言ログの <from> から <to> までのログを表示(日時は ISO8601 表記)
 #
 # Author:
 #   nagachika
@@ -61,6 +62,17 @@ module.exports = (robot) ->
   robot.respond /log\s+search\s+(.+)/, (msg) ->
     mongo_query msg, {room: msg.message.room, text: new RegExp(msg.match[1])}, (_msg, items) ->
       buf = "#{items.length} matches:\n"
+      for m in items
+        date = m["time"]
+        date_str = format_datetime(date)
+        buf += "#{m["user"]}:#{date_str}: #{m["text"]}\n"
+      _msg.send buf
+
+  robot.respond /log\s+show\sfrom\s+([0-9:T-]+)\s+to\s+([0-9::T-]+)/, (msg) ->
+    from = new Date(msg.match[1]+"+0900")
+    to = new Date(msg.match[2]+"+0900")
+    mongo_query msg, {room: msg.message.room, time: { "$gt": from, "$lte": to } }, (_msg, items) ->
+      buf = "#{items.length} messages:\n"
       for m in items
         date = m["time"]
         date_str = format_datetime(date)
