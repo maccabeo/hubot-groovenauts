@@ -44,20 +44,25 @@ module.exports = (robot) ->
 
   # use docker host mongodb
   mongo = require("mongodb").MongoClient
-  robot.respond /log\s+search\+(.+)/, (msg) ->
+
+  mongo_query = (msg, query, cb) ->
     mongo.connect "mongodb://172.17.42.1:27017/hubot_#{process.env.HUBOT_SLACK_TEAM}", (err, db) ->
       if (err)
         msg.send "mongodb connection failure: #{err}"
       else
         collection = db.collection("chat_logs")
-        collection.find({room: msg.message.room, text: new RegExp(msg.match[1])}).toArray (err, items) ->
+        collection.find(query).toArray (err, items) ->
           if (err)
             msg.send "mongodb query failure: #{err}"
           else
-            buf = "#{items.length} matches:\n"
-            for m in items
-              date = m["time"]
-              date_str = format_datetime(date)
-              buf += "#{m["user"]}:#{date_str}: #{m["text"]}\n"
-            msg.send buf
+            cb(msg, items)
           db.close
+
+  robot.respond /log\s+search\s+(.+)/, (msg) ->
+    mongo_query msg, {room: msg.message.room, text: new RegExp(msg.match[1])}, (_msg, items) ->
+      buf = "#{items.length} matches:\n"
+      for m in items
+        date = m["time"]
+        date_str = format_datetime(date)
+        buf += "#{m["user"]}:#{date_str}: #{m["text"]}\n"
+      _msg.send buf
