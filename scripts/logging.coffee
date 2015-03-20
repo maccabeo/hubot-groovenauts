@@ -7,7 +7,7 @@
 #   None
 #
 # Commands:
-#   hubot log search <words> -- このチャンネルの発言ログを検索
+#   hubot log search <regexp> -- このチャンネルの発言ログを検索
 #
 # Author:
 #   nagachika
@@ -22,9 +22,29 @@ module.exports = (robot) ->
     text = msg.message.text
     fluent.emit "chatlog", {room: room, user: username, text: text}
 
+
+  format_datetime = (date) ->
+    month = date.getMonth()
+    day = date.getDate()
+    hour = date.getHours()
+    min = date.getMinutes()
+    sec = date.getSeconds()
+    if month < 10
+      month = "0" + month
+    if day < 10
+      day = "0" + day
+    if hour < 10
+      hour = "0" + hour
+    if min < 10
+      min = "0" + min
+    if sec < 10
+      sec = "0" + sec
+    return "#{date.getFullYear()}-#{month}-#{day} #{hour}:#{min}:#{sec}"
+
+
   # use docker host mongodb
   mongo = require("mongodb").MongoClient
-  robot.respond /log search (.+)/, (msg) ->
+  robot.respond /log\s+search\+(.+)/, (msg) ->
     mongo.connect "mongodb://172.17.42.1:27017/hubot_#{process.env.HUBOT_SLACK_TEAM}", (err, db) ->
       if (err)
         msg.send "mongodb connection failure: #{err}"
@@ -37,22 +57,7 @@ module.exports = (robot) ->
             buf = "#{items.length} matches:\n"
             for m in items
               date = m["time"]
-              month = date.getMonth()
-              day = date.getDate()
-              hour = date.getHours()
-              min = date.getMinutes()
-              sec = date.getSeconds()
-              if month < 10
-                month = "0" + month
-              if day < 10
-                day = "0" + day
-              if hour < 10
-                hour = "0" + hour
-              if min < 10
-                min = "0" + min
-              if sec < 10
-                sec = "0" + sec
-              date_str = "#{date.getFullYear()}-#{month}-#{day} #{hour}:#{min}:#{sec}"
+              date_str = format_datetime(date)
               buf += "#{m["user"]}:#{date_str}: #{m["text"]}\n"
             msg.send buf
           db.close
