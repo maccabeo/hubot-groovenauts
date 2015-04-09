@@ -12,7 +12,7 @@
 #   hubot github show repos -- デフォルトの対象リポジトリ一覧表示
 #   hubot github add repo <repo> -- デフォルトの対象リポジトリに <repo> を追加
 #   hubot github remove repo <repo> -- デフォルトの対象リポジトリから <repo> を削除
-#   hubot github show {PR,pull req} [<repo>] -- GitHub の open な pull request 一覧
+#   hubot github show {PR,pull req} [no-wip] [<repo>] -- GitHub の open な pull request 一覧
 #   hubot github show issue[s] -- GitHub の open な issue 一覧
 #
 # Notes:
@@ -72,9 +72,10 @@ module.exports = (robot) ->
       robot.brain.set("github_default_target_repos", repos)
       msg.send "対象のリポジトリから #{repo} を削除しました"
 
-  robot.respond /github\s+show\s+(PRs?|pull\s+req(uests?)?)\s*([a-z0-9._/-]+)?$/i, (msg)->
-    repos = msg.match[3]
-    if repos
+  robot.respond /github\s+show\s+(PRs?|pull\s+req(uests?)?)(\s+no-wip)?\s*([a-z0-9._/-]+)?$/i, (msg)->
+    nowip = msg.match[3]
+    repo = msg.match[4]
+    if repo
       repos = []
       for r in repo.split(",")
         repos.push(r)
@@ -91,6 +92,8 @@ module.exports = (robot) ->
           else
             summary = "#{repo}: pull request 一覧\n"
             for pull in pulls
+              if nowip && pull.title.indexOf("[WIP]") > -1
+                continue
               mentioned = []
               pull.body.replace /\[ \]\s*(@[a-z0-9_-]+)/g, (match, nick) ->
                 mentioned.push(nick)
