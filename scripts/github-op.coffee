@@ -95,7 +95,7 @@ module.exports = (robot) ->
               if nowip && pull.title.indexOf("[WIP]") > -1
                 continue
               mentioned = []
-              pull.body.replace /\[ \]\s*(@[a-z0-9_-]+)/g, (match, nick) ->
+              pull.body.replace /\[ \]\s*(@[a-z0-9_-]+)/gi, (match, nick) ->
                 mentioned.push(nick)
                 match
               mentioned = mentioned.map (nick) ->
