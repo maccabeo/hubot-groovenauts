@@ -115,7 +115,8 @@ extract_mentions = (robot, body) ->
 ellipsisize = (str, num) ->
   lines = str.split("\n")
   header = lines.slice(0, num)
-  buff = header.join("\n")
+  buff = header.map (l) -> "> " + l
+               .join("\n")
   quotes = buff.match(/```/g)
   if (quotes && quotes.length % 2) == 1
     buff += "\n```"
