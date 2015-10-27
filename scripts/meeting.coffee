@@ -8,7 +8,7 @@ holiday = require "holiday-jp"
 module.exports = (robot) ->
   new cron "0 10 10 * * 1-5", () ->
     if !(holiday.isHoliday(new Date()))
-      robot.send {room: "general"}, "そろそろ朝会の時間ですよ"
+      #robot.send {room: "general"}, "そろそろ朝会の時間ですよ"
     else
       date = new Date()
       d = holiday.between(date, date)[0]
