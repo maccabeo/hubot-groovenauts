@@ -46,6 +46,7 @@ run-hubot-latest:
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
+	  -e HUBOT_DEPLOY_APPS_JSON=$(HUBOT_DEPLOY_APPS_JSON) \
 	  -e TZ=$(TZ) \
 	  -p $(HTTP_PORT):8080 \
 	  --name="hubot-groovenauts" \
@@ -63,6 +64,7 @@ run-hubot-head:
 	  -e REDIS_URL=$(REDIS_URL) \
 	  -e HUBOT_AUTH_ADMIN=$(HUBOT_AUTH_ADMIN) \
 	  -e HUBOT_GITHUB_TOKEN=$(HUBOT_GITHUB_TOKEN) \
+	  -e HUBOT_DEPLOY_APPS_JSON=$(HUBOT_DEPLOY_APPS_JSON) \
 	  -e TZ=$(TZ) \
 	  -p $(HTTP_PORT):8080 \
 	  --name="hubot-groovenauts-$(HUBOT_ENV)" \
