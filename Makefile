@@ -7,11 +7,6 @@ export TZ ?= JST-9
 
 include $(HUBOT_ENV).mk
 
-# for Boot2docker users' convinience
-ifndef REDIS_URL
-REDIS_URL=redis://`boot2docker ip`:6379/$(HUBOT_ENV)
-endif
-
 all: run-hubot
 run: run-hubot
 run-all: run-redis run-hubot

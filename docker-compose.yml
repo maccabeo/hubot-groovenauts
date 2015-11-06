@@ -3,6 +3,8 @@ hubot-latest:
   container_name: hubot-groovenauts
   ports:
     - ${HTTP_PORT}:8080
+  links:
+    - redis
   environment:
     - HUBOT_SLACK_TEAM
     - HUBOT_SLACK_BOTNAME
@@ -19,6 +21,8 @@ hubot-head:
   container_name: hubot-groovenauts-${HUBOT_ENV}
   ports:
     - ${HTTP_PORT}:8080
+  links:
+    - redis
   environment:
     - HUBOT_SLACK_TEAM
     - HUBOT_SLACK_BOTNAME
@@ -33,14 +37,14 @@ hubot-head:
 hubot-test:
   image: ${DOCKER_IMAGE_NAME}:latest
   container_name: hubot-groovenauts-test
+  links:
+    - redis
   environment:
     - TZ
 
 redis:
   image: redis
   container_name: redis
-  ports:
-    - 6379:6379
   volumes:
     - ./brain:/data
   command: redis-server --appendonly yes --auto-aof-rewrite-min-size 32mb --auto-aof-rewrite-percentage 50
