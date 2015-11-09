@@ -22,6 +22,7 @@
     "hubot-rss-reader": "^0.6.5",
     "hubot-scripts": "^2.5.16",
     "hubot-slack": "^3.2.1",
+    "hubot-vault": "0.0.1",
     "mocha": "^2.0.1",
     "mongodb": "^1.4.31",
     "nock": "^0.58.0",
