@@ -12,7 +12,7 @@
     "githubot": "^0.5.0",
     "holiday-jp": "latest",
     "hubot": "^2.10.0",
-    "hubot-deploy": "^0.6.53",
+    "hubot-deploy": "^0.10.4",
     "hubot-diagnostics": "0.0.1",
     "hubot-google-translate": "^0.1.0",
     "hubot-help": "^0.1.1",
