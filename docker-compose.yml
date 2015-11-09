@@ -1,0 +1,25 @@
+hubot:
+  image: ${DOCKER_IMAGE_NAME}:latest
+  container_name: hubot-groovenauts
+  ports:
+    - ${HTTP_PORT}:8080
+  links:
+    - redis
+  environment:
+    - HUBOT_SLACK_TEAM
+    - HUBOT_SLACK_BOTNAME
+    - HUBOT_SLACK_TOKEN
+    - HUBOT_AUTH_ADMIN
+    - HUBOT_GITHUB_TOKEN
+    - HUBOT_DEPLOY_APPS_JSON_BASE64
+    - HUBOT_FERNET_SECRETS
+    - REDIS_URL
+    - TZ
+
+redis:
+  image: redis
+  container_name: redis
+  volumes:
+    - ./brain:/data
+  command: redis-server --appendonly yes --auto-aof-rewrite-min-size 32mb --auto-aof-rewrite-percentage 50
+
