@@ -1,4 +1,4 @@
-hubot-latest:
+hubot:
   image: ${DOCKER_IMAGE_NAME}:latest
   container_name: hubot-groovenauts
   ports:
@@ -14,32 +14,6 @@ hubot-latest:
     - HUBOT_DEPLOY_APPS_JSON_BASE64
     - HUBOT_FERNET_SECRETS
     - REDIS_URL
-    - TZ
-
-hubot-head:
-  image: ${DOCKER_IMAGE_NAME}:${CURRENT_VERSION}
-  container_name: hubot-groovenauts-${HUBOT_ENV}
-  ports:
-    - ${HTTP_PORT}:8080
-  links:
-    - redis
-  environment:
-    - HUBOT_SLACK_TEAM
-    - HUBOT_SLACK_BOTNAME
-    - HUBOT_SLACK_TOKEN
-    - HUBOT_AUTH_ADMIN
-    - HUBOT_GITHUB_TOKEN
-    - HUBOT_DEPLOY_APPS_JSON_BASE64
-    - HUBOT_FERNET_SECRETS
-    - REDIS_URL
-    - TZ
-
-hubot-test:
-  image: ${DOCKER_IMAGE_NAME}:latest
-  container_name: hubot-groovenauts-test
-  links:
-    - redis
-  environment:
     - TZ
 
 redis:
