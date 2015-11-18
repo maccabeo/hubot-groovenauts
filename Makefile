@@ -18,14 +18,14 @@ build:
 reload: build stop-hubot run-hubot
 
 run-redis:
-	- docker-compose rm redis
+	- docker-compose rm -f redis
 	docker-compose up -d redis
 
 stop-redis:
 	- docker-compose stop redis
 
 run-hubot:
-	- docker-compose rm hubot
+	- docker-compose rm -f hubot
 	docker-compose up -d hubot
 
 stop-hubot:
