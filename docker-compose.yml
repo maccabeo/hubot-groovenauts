@@ -1,6 +1,7 @@
 hubot:
   image: ${DOCKER_IMAGE_NAME}:latest
   container_name: hubot-groovenauts
+  restart: always
   ports:
     - ${HTTP_PORT}:8080
   links:
@@ -15,6 +16,7 @@ hubot:
     - HUBOT_FERNET_SECRETS
     - REDIS_URL
     - TZ
+    - HUBOT_SLACK_EXIT_ON_DISCONNECT=1
 
 redis:
   image: redis
