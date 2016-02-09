@@ -16,6 +16,7 @@
 # Commands:
 #   hubot github notify <repo> to <room> -- <repo> のイベントを <room> に通知する
 #   hubot github notify show -- GitHub イベントのリポジトリ毎の通知先 room を表示
+#   hubot github notify remove <repo> to <room> -- <repo> のイベントの <room> への通知をやめる
 #
 # URLS:
 #   POST /hubot/gh-notify
@@ -48,6 +49,20 @@ module.exports = (robot) ->
     for repo, rooms of repos
       rooms ||= []
       msg.send "#{repo} → #{rooms.join(", ")}"
+
+  robot.respond /github\s+notify\s+remove\s+([a-z0-9_./-]+)\s+to\s+([^\s]+)\s*$/, (msg) ->
+    unique = (array) ->
+      output = {}
+      output[array[key]] = array[key] for key in [0...array.length]
+      value for key, value of output
+    repo = msg.match[1]
+    room = msg.match[2]
+    m = (robot.brain.get("gh-notify-repository-to-rooms") || {})
+    r = (m[repo] || [])
+    r = r.filter (rm) -> rm isnt room
+    m[repo] = unique r
+    robot.brain.set("gh-notify-repository-to-rooms", m)
+    msg.reply "#{repo} の通知を #{room} に送信するのをやめます"
 
   robot.router.post "/hubot/gh-notify", (req, res) ->
     data = req.body
