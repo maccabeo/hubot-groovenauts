@@ -16,7 +16,7 @@ module.exports = (robot) ->
     robot.brain.set("timelines-webhook-url", url)
     msg.reply "timelines の WebHook URL を #{url} に設定しました"
 
-  robot.respond /timelines\s+icon\s+(\w+)\s+:?([a-zA-Z0-9_-]+):?\s*$/, (msg) ->
+  robot.respond /timelines\s+icon\s+([a-zA-Z0-9_-]+)\s+:?([a-zA-Z0-9_-]+):?\s*$/, (msg) ->
     username = msg.match[1]
     icon_emoji = ":#{msg.match[2]}:"
     icons = (robot.brain.get("timelines-icons") || {})
