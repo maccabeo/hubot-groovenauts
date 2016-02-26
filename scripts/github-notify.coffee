@@ -128,7 +128,7 @@ extract_mentions = (robot, body) ->
     []
 
 ellipsisize = (str, num) ->
-  lines = str.split("\n")
+  lines = (str || "").split("\n")
   header = lines.slice(0, num)
   buff = header.map (l) -> "> " + l
                .join("\n")
