@@ -163,7 +163,7 @@ announcePullRequestReviewComment = (robot, data, cb) ->
       mentioned = extract_mentions(robot, data.comment.body)
 
       if mentioned.length > 0
-        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+        mentioned_line = "\n> Mentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
 
@@ -175,7 +175,7 @@ announceIssue = (robot, data, cb) ->
       mentioned = extract_mentions(robot, data.issue.body)
 
       if mentioned.length > 0
-        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+        mentioned_line = "\n> Mentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
 
@@ -189,7 +189,7 @@ announceIssueComment = (robot, data, cb) ->
     when 'created'
       mentioned = extract_mentions(robot, data.comment.body)
       if mentioned.length > 0
-        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+        mentioned_line = "\n> Mentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
       cb "\"#{data.issue.title}\" コメント追加 by #{data.comment.user.login}\n#{data.comment.html_url}#{mentioned_line}\n#{ellipsisize(data.comment.body, 4)}"
