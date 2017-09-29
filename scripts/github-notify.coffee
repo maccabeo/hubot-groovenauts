@@ -145,7 +145,7 @@ announcePullRequest = (robot, data, cb) ->
       mentioned = extract_mentions(robot, data.pull_request.body)
 
       if mentioned.length > 0
-        mentioned_line = "\nMentioned: #{mentioned.join(", ")}"
+        mentioned_line = "\n> Mentioned: #{mentioned.join(", ")}"
       else
         mentioned_line = ''
 
