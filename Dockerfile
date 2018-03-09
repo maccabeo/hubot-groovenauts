@@ -1,6 +1,6 @@
 FROM node:0.10-onbuild
 
-MAINTAINER nagachika@ruby-lang.org
+MAINTAINER mattia.moretti@trithemius.at
 
 EXPOSE 8080
 

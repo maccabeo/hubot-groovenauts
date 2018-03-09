@@ -1,1 +1,6 @@
-[]
+[
+	"github-account-map.coffee",
+	"github-notify.coffee",
+	"github-op.coffee",
+	"cam.coffee"
+]

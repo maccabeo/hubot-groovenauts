@@ -1,14 +1,14 @@
 hubot:
-  image: trithemius/hubot:latest
+  image: ${DOCKER_IMAGE_NAME}:latest
   container_name: hubot-groovenauts
   restart: always
-  #ports:
-  #  - ${HTTP_PORT}:8080
+  ports:
+    - ${HTTP_PORT}:8080
   links:
     - redis
   environment:
-  #  - HUBOT_SLACK_TEAM
-    - HUBOT_SLACK_BOTNAME=reuchlin
+    - HUBOT_SLACK_TEAM
+    - HUBOT_SLACK_BOTNAME
     - HUBOT_SLACK_TOKEN
     - HUBOT_AUTH_ADMIN
     - HUBOT_GITHUB_TOKEN

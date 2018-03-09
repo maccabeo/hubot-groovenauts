@@ -1,5 +1,5 @@
 
-export DOCKER_IMAGE_NAME=hubot-groovenauts
+export DOCKER_IMAGE_NAME=trithemius/hubot
 export HUBOT_ENV ?= staging
 export HTTP_PORT ?= 8080
 export TZ ?= JST-9
